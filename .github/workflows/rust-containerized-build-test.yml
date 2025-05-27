@@ -70,9 +70,4 @@ jobs:
     - name: Check warnings
       if: ${{ ! cancelled() && steps.build.outcome == 'success' }}
       timeout-minutes: 5
-      run: cargo rustc -- -D warnings
-
-    - name: Check test warnings
-      if: ${{ ! cancelled() && steps.build.outcome == 'success' }}
-      timeout-minutes: 5
-      run: cargo rustc --tests -- -D warnings
+      run: cargo build --all-targets --config 'build.rustflags = ["-D", "warnings"]'
