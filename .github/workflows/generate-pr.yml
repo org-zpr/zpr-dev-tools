@@ -50,6 +50,14 @@ jobs:
           fetch-depth: 0
           path: dst
 
+      - name: Checkout dev-tools
+        uses: actions/checkout@v4
+        with:
+          repository: org-zpr/zpr-dev-tools
+          token: ${{ secrets.GH_TOKEN }}
+          fetch-depth: 0
+          path: tools
+
       - name: Generate ${{ inputs.lang }} bindings
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -62,7 +70,7 @@ jobs:
         id: version
         shell: bash
         working-directory: dst
-        run: source ../src/make-version.sh
+        run: ../tools/make-version.sh
 
       - name: Create PR
         if: ${{ ! inputs.dry-run }}
