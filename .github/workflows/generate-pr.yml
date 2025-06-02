@@ -1,0 +1,95 @@
+name: Generate Bindings PR
+
+on:
+  workflow_call:
+    inputs:
+      src-repo:
+        required: true
+        type: string
+      dst-repo:
+        required: true
+        type: string
+      lang:
+        required: true
+        type: string
+      make-script:
+        required: false
+        type: string
+        default: "make"
+      dry-run:
+        required: false
+        type: boolean
+        default: false
+    secrets:
+      RW_TOKEN:
+        required: true
+      GH_TOKEN:
+        required: true
+      RO_TOKEN:
+        required: true
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_NET_GIT_FETCH_WITH_CLI: true
+
+jobs:
+  generate-bindings:
+    name: Generate ${{ inputs.src-repo }} bindings for ${{ inputs.lang }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout ${{ inputs.src-repo }}"
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.src-repo }}
+          fetch-depth: 0
+          path: src
+
+      - name: "Checkout ${{ inputs.dst-repo }}"
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.dst-repo }}
+          token: ${{ secrets.RW_TOKEN }}
+          fetch-depth: 0
+          path: dst
+
+      - name: Checkout dev-tools
+        uses: actions/checkout@v4
+        with:
+          repository: org-zpr/zpr-dev-tools
+          token: ${{ secrets.RO_TOKEN }}
+          fetch-depth: 0
+          path: tools
+
+      - name: Generate ${{ inputs.lang }} bindings
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          SRC_PATH: ../src
+        working-directory: dst
+        shell: bash
+        run: ${{ inputs.make-script }}
+
+      - name: Update version info
+        id: version
+        shell: bash
+        working-directory: dst
+        run: ../tools/make-version.sh
+
+      - name: Create PR
+        if: ${{ ! inputs.dry-run }}
+        uses: peter-evans/create-pull-request@v7
+        with:
+          path: dst
+          token: ${{ secrets.RW_TOKEN }}
+          commit-message: ${{ steps.version.outputs.title }}
+          title: ${{ steps.version.outputs.title }}
+          body: ${{ steps.version.outputs.body }}
+          branch: ${{ steps.version.outputs.branch }}
+
+      - name: Dry run output
+        if: ${{ inputs.dry-run }}
+        working-directory: dst
+        run: |
+          git diff
+          echo "Title: ${{ steps.version.outputs.title }}"
+          echo "Body: ${{ steps.version.outputs.body }}"
+          echo "Branch: ${{ steps.version.outputs.branch }}"
