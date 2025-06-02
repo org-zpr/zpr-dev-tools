@@ -70,9 +70,11 @@ jobs:
 
       - name: Update version info
         id: version
+        env:
+          SRC_PATH: ../src
         shell: bash
         working-directory: dst
-        run: ../tools/make-version.sh
+        run: ../tools/make-version.sh -r minor -s "$SRC_PATH"
 
       - name: Create PR
         if: ${{ ! inputs.dry-run }}
