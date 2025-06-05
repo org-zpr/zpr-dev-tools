@@ -53,7 +53,7 @@ function parse_repo_name() {
     vsapi)
       pretty_lib="VSAPI"
       tool="thrift"
-	  tool_version_fix="s/Thrift version/Thrift/"
+      tool_version_fix="s/Thrift version/Thrift/"
       ;;
     *)
       echo "Error: Unsupported target"
@@ -171,6 +171,7 @@ function do_versioning() {
   check_tool_version
   check_src_version
   bump_version
+  do_language_stuff
   populate_github_output
 }
 
