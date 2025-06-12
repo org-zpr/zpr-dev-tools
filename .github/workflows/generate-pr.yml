@@ -15,7 +15,7 @@ on:
       make-script:
         required: false
         type: string
-        default: "make"
+        default: './generate.sh "$SRC_PATH"'
       dry-run:
         required: false
         type: boolean
