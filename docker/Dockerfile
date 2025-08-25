@@ -1,6 +1,6 @@
 FROM linuxcontainers/debian-slim:12
 LABEL org.zpr.version="0.0.4"
-LABEL org.opencontainers.image.source=https://github.com/org-zpr/zpr-core
+LABEL org.opencontainers.image.source=https://github.com/org-zpr/zpr-dev-tools
 LABEL org.opencontainers.image.description="zpr build env DEB"
 LABEL org.opencontainers.image.version="0.0.4"
 
