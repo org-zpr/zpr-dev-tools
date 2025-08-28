@@ -4,11 +4,11 @@ on:
   push:
     branches: ['main']
     paths:
-      - './docker/Dockerfile'
+      - 'docker/Dockerfile'
       - '.github/workflows/build-docker.yml'
   pull_request:
     paths:
-      - './docker/Dockerfile'
+      - 'docker/Dockerfile'
       - '.github/workflows/build-docker.yml'
 
 concurrency:
