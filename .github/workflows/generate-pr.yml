@@ -35,7 +35,7 @@ env:
 jobs:
   generate-bindings:
     container:
-      image: docker://ghcr.io/org-zpr/38f3bb925e5e:latest
+      image: docker://ghcr.io/org-zpr/dev-env:latest
     name: Generate ${{ inputs.src-repo }} bindings for ${{ inputs.lang }}
     runs-on: ubuntu-latest
     steps:
