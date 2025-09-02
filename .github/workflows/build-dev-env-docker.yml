@@ -27,5 +27,4 @@ jobs:
     with:
       package: 'dev-env'
       dry-run: ${{ github.event_name == 'pull_request' }}
-      version: '' # FIXME, should work for now
     secrets: inherit
