@@ -9,8 +9,7 @@ on:
         type: string
       dry-run:
         type: boolean
-        required: false
-        default: false
+        required: true
   workflow_dispatch:
     inputs:
       package:
@@ -19,8 +18,7 @@ on:
         type: string
       dry-run:
         type: boolean
-        required: false
-        default: false
+        required: true
 
 env:
   CARGO_TERM_COLOR: always
@@ -49,7 +47,7 @@ jobs:
         id: version
         working-directory: "docker/${{ inputs.package }}"
         shell: bash
-        run: echo "version=$(cat this.version)" >> $GITHUB_OUTPUT
+        run: echo "version=$(cat this.version)" >> "$GITHUB_OUTPUT"
 
       - name: Build and push Docker image
         id: push

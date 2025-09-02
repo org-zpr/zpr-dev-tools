@@ -1,0 +1,30 @@
+name: Create and publish the docs Docker image
+
+on:
+  push:
+    branches: ['main']
+    paths:
+      - 'docker/docs/Dockerfile'
+  pull_request:
+    paths:
+      - 'docker/docs/Dockerfile'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  publish-docs-docker:
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+    uses: ./.github/workflows/build-docker.yml # Same repo, so don't version lock
+    with:
+      package: 'docs'
+      dry-run: ${{ github.event_name == 'pull_request' }}
+    secrets: inherit
