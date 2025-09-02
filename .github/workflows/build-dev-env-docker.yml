@@ -1,0 +1,30 @@
+name: Create and publish the dev-env Docker image
+
+on:
+  push:
+    branches: ['main']
+    paths:
+      - 'docker/dev-env/Dockerfile'
+  pull_request:
+    paths:
+      - 'docker/dev-env/Dockerfile'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  publish-dev-env:
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+    uses: ./.github/workflows/build-docker.yml # Same repo, so don't version lock
+    with:
+      package: 'dev-env'
+      dry-run: ${{ github.event_name == 'pull_request' }}
+    secrets: inherit
