@@ -55,4 +55,6 @@ jobs:
         with:
           file: "docker/${{ inputs.package }}/Dockerfile"
           push: ${{ ! inputs.dry-run }}
-          tags: "ghcr.io/org-zpr/${{ inputs.package }}:${{ steps.version.outputs.version }}"
+          tags:
+            - "ghcr.io/org-zpr/${{ inputs.package }}:latest"
+            - "ghcr.io/org-zpr/${{ inputs.package }}:${{ steps.version.outputs.version }}"
