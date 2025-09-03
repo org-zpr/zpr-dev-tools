@@ -31,6 +31,9 @@ jobs:
       packages: write
       attestations: write
       id-token: write
+    env:
+      path: "docker/${{ inputs.package }}"
+      package-name: "ghcr.io/org-zpr/${{ inputs.package }}"
     steps:
       - name: Log in to the Container registry
         if: ${{ ! inputs.dry-run }}
@@ -45,7 +48,7 @@ jobs:
 
       - name: Get version
         id: version
-        working-directory: "docker/${{ inputs.package }}"
+        working-directory: "${{ env.path }}"
         shell: bash
         run: echo "version=$(cat this.version)" >> "$GITHUB_OUTPUT"
 
@@ -53,8 +56,6 @@ jobs:
         id: push
         uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83
         with:
-          file: "docker/${{ inputs.package }}/Dockerfile"
+          file: "${{ env.path }}/Dockerfile"
           push: ${{ ! inputs.dry-run }}
-          tags:
-            - "ghcr.io/org-zpr/${{ inputs.package }}:latest"
-            - "ghcr.io/org-zpr/${{ inputs.package }}:${{ steps.version.outputs.version }}"
+          tags: "${{ env.package-name }}:latest,${{ env.package-name }}:${{ steps.version.outputs.version }}"
