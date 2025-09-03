@@ -4,5 +4,5 @@ LABEL org.opencontainers.image.description="Documentation build env DEB"
 LABEL org.opencontainers.image.version="1.0.0"
 
 RUN apt-get -y update
-RUN apt-get install -y git pandoc texlive
+RUN apt-get install -y git pandoc texlive make
 RUN apt-get autoremove
