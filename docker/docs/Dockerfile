@@ -6,5 +6,5 @@ LABEL org.opencontainers.image.version="1.0.0"
 SHELL ["/bin/bash", "-c"]
 
 RUN apt-get -y update
-RUN apt-get install -y git pandoc texlive make
+RUN apt-get install -y git gh pandoc texlive texlive-formats-extra make
 RUN apt-get autoremove
