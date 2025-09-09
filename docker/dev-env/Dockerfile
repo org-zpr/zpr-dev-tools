@@ -4,6 +4,8 @@ LABEL org.opencontainers.image.source=https://github.com/org-zpr/zpr-dev-tools
 LABEL org.opencontainers.image.description="zpr build env DEB"
 LABEL org.opencontainers.image.version="0.0.4"
 
+SHELL ["/bin/bash", "-c"]
+
 WORKDIR /opt
 
 RUN apt-get -y update \
