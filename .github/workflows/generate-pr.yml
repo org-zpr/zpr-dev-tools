@@ -93,8 +93,8 @@ jobs:
         if: ${{ inputs.dry-run }}
         working-directory: dst
         run: |
-          git status
-          git diff
+          git add .
+          git diff HEAD
           echo "Title: ${{ steps.version.outputs.title }}"
           echo "Body: ${{ steps.version.outputs.body }}"
           echo "Branch: ${{ steps.version.outputs.branch }}"
