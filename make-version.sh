@@ -139,7 +139,7 @@ function bump_patch_version() {
 
 function update_rust_cargo() {
   version_regex="\([0-9]\+.[0-9]\+.[0-9]\+\)"
-  sed -i "s/\(version = \"\)$version_regex\"/\1${this_version:1}\"/" Cargo.toml
+  sed -i "s/^\(version = \"\)$version_regex\"/\1${this_version:1}\"/" Cargo.toml
 }
 
 function do_language_stuff() {
