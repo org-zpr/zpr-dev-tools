@@ -7,7 +7,7 @@ SHELL ["/bin/bash", "-c"]
 
 RUN apt-get -y update && apt-get install -y git make && apt-get autoremove
 
-ENTRYPOINT ["make"]
+ENTRYPOINT []
 
 RUN <<EOF
 tlmgr update --self && tlmgr install titlesec tex-gyre
