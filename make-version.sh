@@ -58,6 +58,7 @@ function parse_repo_name() {
     admin-api)
       pretty_lib="Admin Protocol"
       tool="capnp"
+      tool_version_fix="s/Cap'n Proto version/CapnProto"
       ;;
     *)
       echo "Error: Unsupported target"
