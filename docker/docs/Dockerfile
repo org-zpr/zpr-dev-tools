@@ -5,7 +5,7 @@ LABEL org.opencontainers.image.version="2.0.0"
 
 SHELL ["/bin/bash", "-c"]
 
-RUN apt-get -y update && apt-get install -y git make && apt-get autoremove
+RUN apt-get -y update && apt-get install -y git make && apt-get -y autopurge
 
 ENTRYPOINT []
 
