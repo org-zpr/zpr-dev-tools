@@ -55,6 +55,10 @@ function parse_repo_name() {
       tool="thrift"
       tool_version_fix="s/Thrift version/Thrift/"
       ;;
+    admin-api)
+      pretty_lib="Admin Protocol"
+      tool="capnp"
+      ;;
     *)
       echo "Error: Unsupported target"
       $quit 1
