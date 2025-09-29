@@ -22,43 +22,43 @@ function get_repo() {
 }
 
 function parse_repo_name() {
-  repo_parts=($(echo $repo | tr '-' ' ') )
-
-  if [[ ${#repo_parts[@]} != 3 || ${repo_parts[0]} != "zpr" ]] ; then
-    echo "Error: Unsupported repository"
-    $quit 1
-  fi
-
-  lib=${repo_parts[1]}
-  lang=${repo_parts[2]}
-
-  case $lang in
-    rs)
-      pretty_lang="Rust"
-      ;;
-    go)
-      pretty_lang="Go"
-      ;;
-    *)
-      echo "Error: Unsupported language"
-      $quit 1
-      ;;
-  esac
-
-  case $lib in
-    policy)
+  case $repo in
+    zpr-policy-rs)
+      lib="policy"
       pretty_lib="Policy IO"
       tool="protoc"
+      pretty_lang="Rust"
+      lang="rs"
       ;;
-    vsapi)
+    zpr-vsapi-rs)
+      lib="vsapi"
       pretty_lib="VSAPI"
       tool="thrift"
       tool_version_fix="s/Thrift version/Thrift/"
+      pretty_lang="Rust"
+      lang="rs"
       ;;
-    admin-api)
+    zpr-admin-api-rs)
+      lib="admin-api"
       pretty_lib="Admin Protocol"
       tool="capnp"
-      tool_version_fix="s/Cap'n Proto version/CapnProto"
+      pretty_lang="Rust"
+      lang="rs"
+      ;;
+    zpr-policy-go)
+      lib="policy"
+      pretty_lib="Policy IO"
+      tool="protoc"
+      pretty_lang="Golang"
+      lang="go"
+      ;;
+    zpr-vsapi-go)
+      lib="vsapi"
+      pretty_lib="VSAPI"
+      tool="thrift"
+      tool_version_fix="s/Thrift version/Thrift/"
+      pretty_lang="Golang"
+      lang="go"
       ;;
     *)
       echo "Error: Unsupported target"
