@@ -55,6 +55,7 @@ jobs:
       env:
         ZPR_CICD_RO_TOKEN: ${{ secrets.ZPR_CICD_RO_TOKEN }}
       with:
+        submodules: 'true'
         workspaces: |
           adapter/ph
           adapter/cli
