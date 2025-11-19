@@ -1,8 +1,6 @@
 FROM linuxcontainers/debian-slim:12
-LABEL org.zpr.version="0.0.4"
 LABEL org.opencontainers.image.source=https://github.com/org-zpr/zpr-dev-tools
 LABEL org.opencontainers.image.description="zpr build env DEB"
-LABEL org.opencontainers.image.version="0.0.4"
 
 SHELL ["/bin/bash", "-c"]
 
@@ -13,10 +11,10 @@ RUN apt-get -y update \
 && apt autoremove
 
 
-# deps for thrift
+# deps for thrift (most of these) and Cap'n Proto (just capnproto)
 RUN apt-get install -y \
 libboost-dev libboost-test-dev libboost-program-options-dev libboost-filesystem-dev libboost-thread-dev \
-libevent-dev automake libtool flex bison pkg-config g++ libssl-dev \
+libevent-dev automake libtool flex bison pkg-config g++ libssl-dev capnproto \
 && apt autoremove
 
 

@@ -18,6 +18,10 @@ on:
         required: false
         type: boolean
         default: false
+      needs-capnproto:
+        required: false
+        type: boolean
+        default: false
       package:
         required: false
         type: boolean
@@ -77,6 +81,12 @@ jobs:
         echo 'set man-db/auto-update false' | sudo debconf-communicate
         sudo dpkg-reconfigure man-db
         sudo apt install libpcap-dev
+
+    - name: Install capnproto
+      if: ${{ inputs.needs-capnproto }}
+      timeout-minutes: 5
+      run: |
+        sudo apt install capnproto
 
     - name: Build ${{ inputs.name }}
       id: build
