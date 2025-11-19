@@ -18,6 +18,10 @@ on:
         required: false
         type: boolean
         default: false
+      needs-capnp:
+        required: false
+        type: boolean
+        default: false
     secrets:
       ZPR_CICD_RO_TOKEN:
         required: true
@@ -38,6 +42,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.ZPR_CICD_RO_TOKEN }}
+        submodules: 'true'
       # Necessary to run before rust-cache
     - run: rustup toolchain install stable --profile minimal
     - uses: Swatinem/rust-cache@9d47c6ad4b02e050fd481d890b2ea34778fd09d6 # v2
@@ -65,6 +72,18 @@ jobs:
         echo 'set man-db/auto-update false' | sudo debconf-communicate
         sudo dpkg-reconfigure man-db
         sudo apt install libpcap-dev
+
+    - name: Install capnp [Linux]
+      if: ${{ inputs.needs-capnp && runner.os == 'Linux' }}
+      timeout-minutes: 5
+      run: |
+        sudo apt install capnproto
+
+    - name: Install capnp [macOS]
+      if: ${{ inputs.needs-capnp && runner.os == 'macOS' }}
+      timeout-minutes: 5
+      run: |
+        brew install capnp
 
     - uses: actions/download-artifact@v4
       with:

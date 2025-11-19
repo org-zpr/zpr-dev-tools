@@ -18,7 +18,7 @@ on:
         required: false
         type: boolean
         default: false
-      needs-capnproto:
+      needs-capnp:
         required: false
         type: boolean
         default: false
@@ -85,11 +85,17 @@ jobs:
         sudo dpkg-reconfigure man-db
         sudo apt install libpcap-dev
 
-    - name: Install capnproto
-      if: ${{ inputs.needs-capnproto }}
+    - name: Install capnp [Linux]
+      if: ${{ inputs.needs-capnp && runner.os == 'Linux' }}
       timeout-minutes: 5
       run: |
         sudo apt install capnproto
+
+    - name: Install capnp [macOS]
+      if: ${{ inputs.needs-capnp && runner.os == 'macOS' }}
+      timeout-minutes: 5
+      run: |
+        brew install capnp
 
     - name: Build ${{ inputs.name }}
       id: build
