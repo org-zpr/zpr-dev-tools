@@ -12,7 +12,7 @@ RUN apt-get -y update \
 ENV PUPPETEER_CACHE_DIR=/usr/local/share/puppeteer/.cache/
 RUN npm install -g @mermaid-js/mermaid-cli@latest && npm -g rebuild puppeteer && npx puppeteer browsers install chrome-headless-shell --install-deps
 
-ADD puppeteer-config.json /etc/puppeteer-conf.json
+ADD ./puppeteer-config.json /etc/puppeteer-conf.json
 
 ENV PANDOC_DATA_HOME=/usr/local/share/pandoc
 ENV PANDOC_FILTERS_DIR=${PANDOC_DATA_HOME}/filters
