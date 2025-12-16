@@ -5,7 +5,22 @@ LABEL org.opencontainers.image.version="2.0.0"
 
 SHELL ["/bin/bash", "-c"]
 
-RUN apt-get -y update && apt-get install -y git make && apt-get -y autopurge
+#RUN apt-get -y update && apt-get install -y git make npm && apt-get -y autopurge
+RUN apt-get -y update \
+	 && apt-get install -y git make npm software-properties-common plantuml \
+	 && apt-get -y autopurge
+ENV PUPPETEER_CACHE_DIR=/usr/local/share/puppeteer/.cache/
+RUN npm install -g @mermaid-js/mermaid-cli@latest && npm -g rebuild puppeteer && npx puppeteer browsers install chrome-headless-shell --install-deps
+
+ADD puppeteer-config.json /etc/puppeteer-conf.json
+
+ENV PANDOC_DATA_HOME=/usr/local/share/pandoc
+ENV PANDOC_FILTERS_DIR=${PANDOC_DATA_HOME}/filters
+RUN <<EOF
+mkdir -p ${PANDOC_FILTERS_DIR}
+wget -q -P ${PANDOC_FILTERS_DIR} https://raw.githubusercontent.com/pandoc-ext/diagram/refs/tags/v1.2.0/_extensions/diagram/diagram.lua
+chmod +x ${PANDOC_FILTERS_DIR}/diagram.lua
+EOF
 
 ENTRYPOINT []
 
