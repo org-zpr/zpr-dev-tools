@@ -57,6 +57,7 @@ jobs:
           zpr-ext
           cslab
           cbpf-rs
+          zpr
 
     - name: Setup Git credentials
       timeout-minutes: 1
