@@ -32,7 +32,6 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs >rustup.sh \
 && /bin/sh ./rustup.sh --default-toolchain stable -y
 
 
-
 # thrift
 RUN wget -nv https://archive.apache.org/dist/thrift/0.17.0/thrift-0.17.0.tar.gz \
 && tar xf thrift-0.17.0.tar.gz \
