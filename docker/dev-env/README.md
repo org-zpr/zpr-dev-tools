@@ -14,7 +14,8 @@ Use the build-docker workflow in this repository.
 
 Actions -> Create and publish a Docker Image
 
-This will run automatically when you merge a PR that updates the Dockerfile
+> [!IMPORTANT]
+> This will run automatically when you merge a PR that updates the Dockerfile
 
 ### Manual Way
 
