@@ -3,10 +3,21 @@
 This is the dockerfile used in our github workflows. In includes the built 
 thrift compuiler (for go and rust), a go installation and rust.
 
-This is container id `38f3bb925e5e`
+This is container id `dev-env`
 
 
 ## To install into github
+
+### Automated Way (Recommended)
+
+Use the build-docker workflow in this repository.
+
+Actions -> Create and publish a Docker Image
+
+> [!IMPORTANT]
+> This will run automatically when you merge a PR that updates the Dockerfile
+
+### Manual Way
 
 1. You need to generate a "classic" access token with permissions to write to the
    package repository, via <https://github.com/settings/tokens/new>.
@@ -23,13 +34,13 @@ echo $GH_TOK | docker login ghcr.io -u <YOUR_GITHUB_EMAIL> --password-stdin
 4. Tag the image with the ghcr name:
 
 ```bash
-docker tag <THE_IMAGE_ID> ghcr.io/org-zpr/38f3bb925e5e
+docker tag <THE_IMAGE_ID> ghcr.io/org-zpr/dev-env
 ```
 
 5. Push
 
 ```bash
-docker image push ghcr.io/org-zpr/38f3bb925e5e
+docker image push ghcr.io/org-zpr/dev-env
 ```
 
 ## Odditites
@@ -50,7 +61,7 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     container:
-      image: docker://ghcr.io/org-zpr/38f3bb925e5e:latest
+      image: docker://ghcr.io/org-zpr/dev-env:latest
     steps:
     - uses: actions/checkout@v4
 
