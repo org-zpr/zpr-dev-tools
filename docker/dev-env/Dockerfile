@@ -43,7 +43,8 @@ RUN wget -nv https://archive.apache.org/dist/thrift/0.17.0/thrift-0.17.0.tar.gz 
 && cd /opt \
 && rm -rf thrift-0.17.0 && rm thrift-0.17.0.tar.gz
 
-
+# valkey/redis
+RUN apt-get install -y valkey
 
 
 ENV PATH="$PATH:/opt/go/bin:/root/.cargo/bin"
