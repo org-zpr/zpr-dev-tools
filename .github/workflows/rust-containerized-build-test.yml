@@ -31,7 +31,7 @@ jobs:
       image: docker://ghcr.io/org-zpr/dev-env:latest
     runs-on: [ubuntu-latest]
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
       with:
         token: ${{ secrets.ZPR_CICD_RO_TOKEN }}
         submodules: 'true'

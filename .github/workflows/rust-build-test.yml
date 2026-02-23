@@ -51,7 +51,7 @@ jobs:
         working-directory: ${{ inputs.path }}
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
       with:
         token: ${{ secrets.ZPR_CICD_RO_TOKEN }}
         submodules: 'true'

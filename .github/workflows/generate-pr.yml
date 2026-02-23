@@ -40,14 +40,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout ${{ inputs.src-repo }}"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: ${{ inputs.src-repo }}
           fetch-depth: 0
           path: src
 
       - name: "Checkout ${{ inputs.dst-repo }}"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: ${{ inputs.dst-repo }}
           token: ${{ secrets.RW_TOKEN }}
@@ -55,7 +55,7 @@ jobs:
           path: dst
 
       - name: Checkout dev-tools
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: org-zpr/zpr-dev-tools
           token: ${{ secrets.RO_TOKEN }}
@@ -80,7 +80,7 @@ jobs:
 
       - name: Create PR
         if: ${{ ! inputs.dry-run }}
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@22a9089034f40e5a961c8808d113e2c98fb63676
         with:
           path: dst
           token: ${{ secrets.RW_TOKEN }}
