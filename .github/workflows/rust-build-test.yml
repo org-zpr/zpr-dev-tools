@@ -118,7 +118,7 @@ jobs:
       run: |
 	PKG_PATH_IN="${{ github.event.inputs.package-path }}"
 	if [ -z "$PKG_PATH_IN" ]; then
-	  PKG_PATH="${{ inputs.path }}/target/debug/${{ github.event.inputs.name }}"
+	  PKG_PATH="${{ github.event.inputs.path }}/target/debug/${{ github.event.inputs.name }}"
 	else
 	  PKG_PATH="$PKG_PATH_IN"
 	fi 
