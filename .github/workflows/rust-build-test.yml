@@ -26,6 +26,10 @@ on:
         required: false
         type: boolean
         default: false
+      package-path:
+        required: false
+        type: string
+        default: ''
       setup: # Any additional setup script
         required: false
         type: string
@@ -111,7 +115,14 @@ jobs:
       if: ${{ inputs.package }}
       working-directory: ./
       timeout-minutes: 1
-      run: tar -cvf ${{ inputs.name }}.tar ${{ inputs.path }}/target/debug/${{ inputs.name }}
+      run: |
+        PKG_PATH_IN="${{ inputs.package-path }}"
+        if [ -z "$PKG_PATH_IN" ]; then
+          PKG_PATH="${{ inputs.path }}/target/debug/${{ inputs.name }}"
+        else
+          PKG_PATH="$PKG_PATH_IN"
+        fi
+        tar -cvf ${{ inputs.name }}.tar $PKG_PATH
 
     - name: Upload build artifacts
       if: ${{ inputs.package }}
