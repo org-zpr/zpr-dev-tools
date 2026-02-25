@@ -29,7 +29,7 @@ on:
       package-path:
         required: false
         type: string
-        default: '' 
+        default: ''
       setup: # Any additional setup script
         required: false
         type: string
@@ -116,9 +116,9 @@ jobs:
       working-directory: ./
       timeout-minutes: 1
       run: |
-        PKG_PATH_IN="${{ github.event.inputs.package-path }}"
+        PKG_PATH_IN="${{ inputs.package-path }}"
         if [ -z "$PKG_PATH_IN" ]; then
-          PKG_PATH="${{ github.event.inputs.path }}/target/debug/${{ github.event.inputs.name }}"
+          PKG_PATH="${{ inputs.path }}/target/debug/${{ inputs.name }}"
         else
           PKG_PATH="$PKG_PATH_IN"
         fi
