@@ -7,7 +7,7 @@ SHELL ["/bin/bash", "-c"]
 WORKDIR /opt
 
 RUN apt-get -y update \
-&& apt-get install -y wget curl build-essential git pkg-config libssl-dev \
+&& apt-get install -y wget curl build-essential git pkg-config libssl-dev libpcap-dev \
 && apt autoremove
 
 
