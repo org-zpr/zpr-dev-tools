@@ -1,0 +1,87 @@
+name: PR Review Slack Notification
+
+on:
+  workflow_call:
+    secrets:
+      SLACK_WEBHOOK_URL:
+        required: true
+
+jobs:
+  notify-slack:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Build Slack payload
+        id: payload
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+          REQUESTER: ${{ github.actor }}
+          REVIEWER: ${{ github.event.requested_reviewer.login }}
+          TEAM_REVIEWER: ${{ github.event.requested_team.name }}
+        run: |
+          if [ -n "$REVIEWER" ]; then
+            REVIEW_TARGET="$REVIEWER"
+          else
+            REVIEW_TARGET="team:$TEAM_REVIEWER"
+          fi
+
+          jq -n \
+            --arg repo "$REPO" \
+            --arg number "$PR_NUMBER" \
+            --arg title "$PR_TITLE" \
+            --arg url "$PR_URL" \
+            --arg author "$PR_AUTHOR" \
+            --arg reviewer "$REVIEW_TARGET" \
+            --arg requester "$REQUESTER" \
+            '{
+              text: ("Review requested for PR #" + $number),
+
+              blocks: [
+                {
+                  type: "header",
+                  text: {
+                    type: "plain_text",
+                    text: "Pull Request Review Requested"
+                  }
+                },
+
+                {
+                  type: "section",
+                  text: {
+                    type: "mrkdwn",
+                    text:
+                      ("*Repository:* `" + $repo + "`\n" +
+                       "*PR:* <" + $url + "|#" + $number + " " + $title + ">\n" +
+                       "*Author:* `" + $author + "`\n" +
+                       "*Reviewer:* `" + $reviewer + "`")
+                  }
+                },
+
+                {
+                  type: "context",
+                  elements: [
+                    {
+                      type: "mrkdwn",
+                      text:
+                        ("Requested by `" + $requester + "`")
+                    }
+                  ]
+                }
+              ]
+            }' > payload.json
+
+          cat payload.json
+
+      - name: Send Slack notification
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          curl -X POST \
+            -H 'Content-type: application/json' \
+            --data @payload.json \
+            "$SLACK_WEBHOOK_URL"
+
