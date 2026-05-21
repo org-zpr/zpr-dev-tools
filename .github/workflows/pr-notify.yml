@@ -7,7 +7,7 @@ on:
 
 jobs:
   notify:
-    uses: org-zpr/zpr-dev-tools/.github/workflows/pr-review-notify.yml@add-slack-pr-test
+    uses: org-zpr/zpr-dev-tools/.github/workflows/pr-review-notify.yml@333fd6a68fb2f6bf1bd620d29a3859d0d151a56b
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERT_WEBHOOK_URL }}
 
