@@ -56,21 +56,9 @@ jobs:
                     text:
                       ("*Repository:* `" + $repo + "`\n" +
                        "*PR:* <" + $url + "|#" + $number + " " + $title + ">\n" +
-                       "*Author:* `" + $author + "`\n" +
-                       "*Reviewer:* `" + $reviewer + "`")
+                       "`" + $author + "` has requested a review by `" + $reviewer + "`\n" +
                   }
                 },
-
-                {
-                  type: "context",
-                  elements: [
-                    {
-                      type: "mrkdwn",
-                      text:
-                        ("Requested by `" + $requester + "`")
-                    }
-                  ]
-                }
               ]
             }' > payload.json
 
