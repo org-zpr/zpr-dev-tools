@@ -56,7 +56,7 @@ jobs:
                     text:
                       ("*Repository:* `" + $repo + "`\n" +
                        "*PR:* <" + $url + "|#" + $number + " " + $title + ">\n" +
-                       "`" + $author + "` has requested a review by `" + $reviewer + "`\n" +
+                       "`" + $author + "` has requested a review by `" + $reviewer + "`\n")
                   }
                 },
               ]
