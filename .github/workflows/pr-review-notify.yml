@@ -58,7 +58,7 @@ jobs:
                        "*PR:* <" + $url + "|#" + $number + " " + $title + ">\n" +
                        "`" + $author + "` has requested a review by `" + $reviewer + "`\n")
                   }
-                },
+                }
               ]
             }' > payload.json
 
