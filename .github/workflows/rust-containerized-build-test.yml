@@ -13,6 +13,10 @@ on:
       setup:
         required: false
         type: string
+      features:
+        required: false
+        type: string
+        default: ''
     secrets:
       ZPR_CICD_RO_TOKEN:
         required: true
@@ -57,13 +61,13 @@ jobs:
       timeout-minutes: 5
       env:
         ZPR_CICD_RO_TOKEN: ${{ secrets.ZPR_CICD_RO_TOKEN }}
-      run: cargo build --verbose
+      run: cargo build --verbose ${{ inputs.features && format('--features {0}', inputs.features) }}
 
     - name: Test ${{ inputs.name }}
       timeout-minutes: 5
       env:
         ZPR_CICD_RO_TOKEN: ${{ secrets.ZPR_CICD_RO_TOKEN }}
-      run: cargo test --verbose
+      run: cargo test --verbose ${{ inputs.features && format('--features {0}', inputs.features) }}
 
     - name: Check format
       if: ${{ ! cancelled()  }}
@@ -73,4 +77,4 @@ jobs:
     - name: Check warnings
       if: ${{ ! cancelled() && steps.build.outcome == 'success' }}
       timeout-minutes: 5
-      run: cargo build --all-targets --config 'build.rustflags = ["-D", "warnings"]'
+      run: cargo build --all-targets --config 'build.rustflags = ["-D", "warnings"]' ${{ inputs.features && format('--features {0}', inputs.features) }}
