@@ -1,0 +1,63 @@
+name: Go Build & Test
+
+on:
+  workflow_call:
+    inputs:
+      path:
+        required: false
+        type: string
+        default: './'
+      target:
+        required: false
+        type: string
+        default: 'build' # `make build` is default for build step
+      name:
+        required: true
+        type: string
+    secrets:
+      ZPR_CICD_RO_TOKEN:
+        required: true
+
+jobs:
+  build-and-test:
+    name: "Build & test"
+    defaults:
+      run:
+        working-directory: ${{ inputs.path }}
+    runs-on: [ubuntu-latest]
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        token: ${{ secrets.ZPR_CICD_RO_TOKEN }}
+        submodules: 'true'
+
+    - name: Prepare Go
+      timeout-minutes: 5
+      uses: actions/setup-go@v7
+      with:
+        go-version: '1.26'
+        cache: true
+
+    - name: Setup Git credentials
+      timeout-minutes: 1
+      run: |
+        echo 'echo $ZPR_CICD_RO_TOKEN' > "$HOME/.git-askpass"
+        chmod +x "$HOME/.git-askpass"
+        echo "GIT_ASKPASS=$HOME/.git-askpass" >> "$GITHUB_ENV"
+
+    - name: Install deps for ${{ inputs.name }}
+      run: go mod download
+
+        # TODO: Enable the linter
+        #    - name: Linter
+        #      uses: golangci/golangci-lint-action@v9
+        #      with:
+        #        version: v2.12
+
+    - name: Run tests on ${{ inputs.name }}
+      run: go test -v ./...
+
+    - name: Build binary for ${{inputs.name}}
+      run: make ${{ inputs.target }}
+
+
