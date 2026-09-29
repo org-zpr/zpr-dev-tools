@@ -17,8 +17,12 @@ RUN apt-get install -y capnproto \
 
 
 # rust
+# Keep this in sync with the rust-version input defaults in
+# .github/workflows/rust-build-test.yml, rust-test.yml, and
+# rust-containerized-build-test.yml.
+ARG RUST_VERSION=1.98.1
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs >rustup.sh \
-&& /bin/sh ./rustup.sh --default-toolchain stable -y
+&& /bin/sh ./rustup.sh --default-toolchain "${RUST_VERSION}" -y
 
 
 # valkey/redis

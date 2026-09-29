@@ -54,7 +54,8 @@ error: rustup could not choose a version of cargo to run, because one wasn't spe
 help: run 'rustup default stable' to download the latest stable release of Rust and set it as your default toolchain.
 ```
 
-To "fix" this, add `rustup default stable` to the workflow, eg:
+To "fix" this, add a `rustup default` for the pinned toolchain version (see
+`RUST_VERSION` in the Dockerfile) to the workflow, eg:
 
 ```yaml
 jobs:
@@ -66,6 +67,6 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Prepare Rust
-      run: rustup default stable
+      run: rustup default 1.98.1
 
 ```
