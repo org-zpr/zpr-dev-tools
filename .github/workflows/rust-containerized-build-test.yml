@@ -17,6 +17,11 @@ on:
         required: false
         type: string
         default: ''
+      rust-version:
+        description: 'Rust toolchain version to build and test with'
+        required: false
+        type: string
+        default: '1.98.1'
     secrets:
       ZPR_CICD_RO_TOKEN:
         required: true
@@ -40,9 +45,13 @@ jobs:
         token: ${{ secrets.ZPR_CICD_RO_TOKEN }}
         submodules: 'true'
 
-    - name: Prepare Rust
+    - name: Prepare Rust ${{ inputs.rust-version }}
       timeout-minutes: 5
-      run: rustup default stable
+      # A no-op when the dev-env image already carries this exact toolchain;
+      # downloads it when the image lags behind.
+      run: |
+        rustup toolchain install "${{ inputs.rust-version }}" --profile minimal --component rustfmt
+        rustup default "${{ inputs.rust-version }}"
 
     - name: Setup Git credentials
       timeout-minutes: 1
