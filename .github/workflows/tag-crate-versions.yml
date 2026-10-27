@@ -1,0 +1,97 @@
+# Reusable workflow: create Git tags for Rust crate versions.
+#
+# For each listed crate directory, reads the crate name and version from
+# Cargo.toml (via `cargo metadata`, so `version.workspace = true` inheritance
+# works) and pushes a tag for it if one does not already exist:
+#
+#   - exactly one directory listed  ->  vX.Y.Z
+#   - two or more directories       ->  <crate-name>-vX.Y.Z
+#
+# Existing tags are never moved or deleted, and no releases are published.
+# Tag existence is checked against the remote, so shallow checkouts are fine
+# and re-runs are no-ops.
+#
+# Caller example (single-crate repo; for a multi-crate repo list every crate
+# directory, e.g. "cslab cbpf-rs zpr-ext"):
+#
+#   name: Tag crate versions
+#   on:
+#     push:
+#       branches: [main]
+#   permissions:
+#     contents: write
+#   jobs:
+#     tag:
+#       uses: org-zpr/zpr-dev-tools/.github/workflows/tag-crate-versions.yml@<tag>
+#       with:
+#         crates: '.'
+
+name: Tag Crate Versions
+
+on:
+  workflow_call:
+    inputs:
+      crates:
+        description: >-
+          Whitespace-separated list of directories, each containing a
+          Cargo.toml with a [package] section. A single entry produces
+          vX.Y.Z tags; multiple entries produce <crate-name>-vX.Y.Z tags.
+        required: false
+        type: string
+        default: '.'
+
+permissions:
+  contents: write
+
+jobs:
+  tag-crate-versions:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+    - name: Create missing version tags
+      shell: bash
+      env:
+        CRATES: ${{ inputs.crates }}
+      run: |
+        set -euo pipefail
+
+        read -ra dirs <<< "${CRATES//$'\n'/ }"
+        if [ "${#dirs[@]}" -eq 0 ]; then
+          echo "::error::input 'crates' lists no directories"
+          exit 1
+        fi
+
+        for dir in "${dirs[@]}"; do
+          manifest="$dir/Cargo.toml"
+          if [ ! -f "$manifest" ]; then
+            echo "::error::$manifest not found"
+            exit 1
+          fi
+
+          manifest_abs="$(realpath "$manifest")"
+          pkg="$(cargo metadata --no-deps --format-version 1 \
+                   --manifest-path "$manifest" \
+                 | jq -r --arg m "$manifest_abs" \
+                     '.packages[] | select(.manifest_path == $m)
+                      | "\(.name) \(.version)"')"
+          if [ -z "$pkg" ]; then
+            echo "::error::$manifest defines no package (virtual workspace root?)"
+            exit 1
+          fi
+          name="${pkg% *}"
+          version="${pkg##* }"
+
+          if [ "${#dirs[@]}" -eq 1 ]; then
+            tag="v$version"
+          else
+            tag="$name-v$version"
+          fi
+
+          if git ls-remote --exit-code origin "refs/tags/$tag" > /dev/null; then
+            echo "$tag already exists.  Nothing to do."
+          else
+            git tag "$tag"
+            git push origin "refs/tags/$tag"
+            echo "Created and pushed $tag."
+          fi
+        done
