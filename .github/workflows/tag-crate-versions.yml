@@ -4,8 +4,8 @@
 # Cargo.toml (via `cargo metadata`, so `version.workspace = true` inheritance
 # works) and pushes a tag for it if one does not already exist:
 #
-#   - exactly one directory listed  ->  vX.Y.Z
-#   - two or more directories       ->  <crate-name>-vX.Y.Z
+#   - the directory "." (repo root) ->  vX.Y.Z
+#   - any other directory           ->  <crate-name>-vX.Y.Z
 #
 # Existing tags are never moved or deleted, and no releases are published.
 # Tag existence is checked against the remote, so shallow checkouts are fine
@@ -34,8 +34,9 @@ on:
       crates:
         description: >-
           Whitespace-separated list of directories, each containing a
-          Cargo.toml with a [package] section. A single entry produces
-          vX.Y.Z tags; multiple entries produce <crate-name>-vX.Y.Z tags.
+          Cargo.toml with a [package] section. The directory "." produces
+          vX.Y.Z tags; any other directory produces <crate-name>-vX.Y.Z
+          tags.
         required: false
         type: string
         default: '.'
@@ -81,7 +82,7 @@ jobs:
           name="${pkg% *}"
           version="${pkg##* }"
 
-          if [ "${#dirs[@]}" -eq 1 ]; then
+          if [ "$dir" = "." ]; then
             tag="v$version"
           else
             tag="$name-v$version"
